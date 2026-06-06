@@ -51,7 +51,10 @@ function isPluginState(value: unknown): value is Partial<PluginState> {
   if ('collapsed' in candidate && typeof candidate.collapsed !== 'boolean') {
     return false;
   }
-  if ('panelWidth' in candidate && typeof candidate.panelWidth !== 'number') {
+  if (
+    'panelWidth' in candidate &&
+    (typeof candidate.panelWidth !== 'number' || !Number.isFinite(candidate.panelWidth))
+  ) {
     return false;
   }
   if (

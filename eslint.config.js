@@ -6,11 +6,29 @@ import globals from 'globals';
 
 export default [
   {
-    ignores: ['dist/**', 'node_modules/**', 'geolibre-plugin/dist/**', 'coverage/**'],
+    ignores: [
+      'dist/**',
+      'dist-examples/**',
+      'node_modules/**',
+      'geolibre-plugin/dist/**',
+      'coverage/**',
+      'playwright-report/**',
+      'test-results/**',
+    ],
   },
   {
     ...js.configs.recommended,
-    files: ['**/*.ts', '**/*.tsx'],
+    files: ['**/*.{js,mjs,cjs,ts,tsx}'],
+  },
+  {
+    files: ['**/*.{js,mjs,cjs}'],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      globals: {
+        ...globals.node,
+      },
+    },
   },
   {
     files: ['**/*.ts', '**/*.tsx'],
