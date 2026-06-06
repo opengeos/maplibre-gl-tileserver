@@ -149,7 +149,7 @@
     "eslint": "^9.17.0",
     "eslint-config-prettier": "^10.1.0",
     "jsdom": "^25.0.0",
-    "maplibre-gl": "^5.14.0",
+    "maplibre-gl": "^5.24.0",
     "prettier": "^3.4.0",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
