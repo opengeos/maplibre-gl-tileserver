@@ -74,7 +74,7 @@ function isPluginState(value: unknown): value is Partial<PluginState> {
 }
 
 export const plugin: GeoLibrePlugin = {
-  id: "maplibre-gl-tileserver",
+  id: "maplibre-gl-raster",
   name: "MapLibre GL Tile Server",
   version: "0.1.0",
   activate(app) {

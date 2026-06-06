@@ -13,25 +13,25 @@ RUN npm run build && npm run build:examples
 
 FROM nginx:alpine
 
-COPY --from=builder /app/dist-examples /usr/share/nginx/html/maplibre-gl-tileserver
+COPY --from=builder /app/dist-examples /usr/share/nginx/html/maplibre-gl-raster
 
 RUN echo 'server { \
     listen 80; \
     server_name localhost; \
     root /usr/share/nginx/html; \
     index index.html; \
-    location /maplibre-gl-tileserver/ { \
-        try_files $uri $uri/ /maplibre-gl-tileserver/index.html; \
+    location /maplibre-gl-raster/ { \
+        try_files $uri $uri/ /maplibre-gl-raster/index.html; \
     } \
     location = / { \
-        return 302 /maplibre-gl-tileserver/; \
+        return 302 /maplibre-gl-raster/; \
     } \
 }' > /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
 RUN printf '#!/bin/sh\n\
-echo "maplibre-gl-tileserver examples: http://localhost:8080/maplibre-gl-tileserver/"\n\
+echo "maplibre-gl-raster examples: http://localhost:8080/maplibre-gl-raster/"\n\
 exec nginx -g "daemon off;"\n' > /start.sh && chmod +x /start.sh
 
 CMD ["/start.sh"]

@@ -1,4 +1,4 @@
-# maplibre-gl-tileserver
+# maplibre-gl-raster
 
 Pure TypeScript XYZ/TMS raster tile server powered by **GDAL WebAssembly** and **geotiff.js**, built for **MapLibre GL JS** applications.
 
@@ -16,19 +16,19 @@ Pure TypeScript XYZ/TMS raster tile server powered by **GDAL WebAssembly** and *
 ## Install
 
 ```bash
-npm install maplibre-gl-tileserver
+npm install maplibre-gl-raster
 ```
 
 ## CLI
 
 ```bash
-maplibre-gl-tileserver tests/fixtures/sample.tif --port 8000 --tileMatrixSet WebMercatorQuad
+maplibre-gl-raster tests/fixtures/sample.tif --port 8000 --tileMatrixSet WebMercatorQuad
 ```
 
 ## Node.js server API
 
 ```typescript
-import { createTileServer } from "maplibre-gl-tileserver";
+import { createTileServer } from "maplibre-gl-raster";
 
 const server = await createTileServer({
   source: "image.tif",
@@ -43,7 +43,7 @@ console.log(server.tileUrl);
 ## Browser API
 
 ```typescript
-import { RasterSource } from "maplibre-gl-tileserver/browser";
+import { RasterSource } from "maplibre-gl-raster/browser";
 
 const source = await RasterSource.fromUrl("https://example.com/image.tif");
 const tile = await source.getTile(10, 312, 420, { format: "png", rescale: [0, 3000] });
@@ -52,7 +52,7 @@ const tile = await source.getTile(10, 312, 420, { format: "png", rescale: [0, 30
 ## MapLibre integration
 
 ```typescript
-import { createMapLibreRasterSource } from "maplibre-gl-tileserver/maplibre";
+import { createMapLibreRasterSource } from "maplibre-gl-raster/maplibre";
 
 const spec = await createMapLibreRasterSource({ source: "image.tif" });
 map.addSource("raster", spec.source);

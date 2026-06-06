@@ -80,7 +80,7 @@ export default defineConfig({
           "maplibre-gl": "maplibregl",
         },
         assetFileNames: (assetInfo) => {
-          if (assetInfo.name === "style.css") return "maplibre-gl-tileserver.css";
+          if (assetInfo.name === "style.css") return "maplibre-gl-raster.css";
           return assetInfo.name || "";
         },
       },

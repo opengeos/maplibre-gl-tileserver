@@ -91,7 +91,7 @@ export function writeEnvToGdalFs(
   const [originX, pixelWidth, , originY, , pixelHeight] = window.geotransform;
   const header = [
     'ENVI',
-    `description = { maplibre-gl-tileserver window }`,
+    `description = { maplibre-gl-raster window }`,
     `samples = ${window.width}`,
     `lines = ${window.height}`,
     `bands = ${window.bands}`,

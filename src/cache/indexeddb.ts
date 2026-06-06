@@ -1,4 +1,4 @@
-const DB_NAME = 'maplibre-gl-tileserver';
+const DB_NAME = 'maplibre-gl-raster';
 const STORE_NAME = 'tiles';
 const DB_VERSION = 1;
 
