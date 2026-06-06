@@ -35,6 +35,7 @@ export default defineConfig({
         'src/providers/geotiff-provider.ts',
         'src/cache/filesystem.ts',
         'src/cache/indexeddb.ts',
+        'src/lib/**',
         '**/*.test.ts',
         '**/*.test.tsx',
       ],
