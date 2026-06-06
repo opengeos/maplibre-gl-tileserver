@@ -1,4 +1,4 @@
-import { PluginControl } from "./lib/core/PluginControl";
+import { TileViewerControl } from "./lib/core/TileViewerControl";
 import type { PluginState } from "./lib/core/types";
 import "./lib/styles/plugin-control.css";
 
@@ -10,10 +10,10 @@ type GeoLibreMapControlPosition =
 
 interface GeoLibreAppAPI {
   addMapControl: (
-    control: PluginControl,
+    control: TileViewerControl,
     position?: GeoLibreMapControlPosition,
   ) => boolean;
-  removeMapControl: (control: PluginControl) => void;
+  removeMapControl: (control: TileViewerControl) => void;
 }
 
 interface GeoLibrePlugin {
@@ -31,15 +31,15 @@ interface GeoLibrePlugin {
   applyProjectState?: (app: GeoLibreAppAPI, state: unknown) => boolean | void;
 }
 
-let control: PluginControl | null = null;
+let control: TileViewerControl | null = null;
 let position: GeoLibreMapControlPosition = "top-right";
 let pendingState: Partial<PluginState> | null = null;
 
-function createControl(): PluginControl {
-  const nextControl = new PluginControl({
+function createControl(): TileViewerControl {
+  const nextControl = new TileViewerControl({
     collapsed: pendingState?.collapsed ?? true,
-    panelWidth: pendingState?.panelWidth ?? 300,
-    title: "GeoLibre Plugin Template",
+    panelWidth: pendingState?.panelWidth ?? 320,
+    title: "Raster Viewer",
   });
 
   if (pendingState) {
@@ -74,8 +74,8 @@ function isPluginState(value: unknown): value is Partial<PluginState> {
 }
 
 export const plugin: GeoLibrePlugin = {
-  id: "geolibre-plugin-template",
-  name: "GeoLibre Plugin Template",
+  id: "maplibre-gl-tileserver",
+  name: "MapLibre GL Tile Server",
   version: "0.1.0",
   activate(app) {
     control = control ?? createControl();
