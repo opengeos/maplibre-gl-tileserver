@@ -63,7 +63,10 @@ function shouldReadStatisticsBeforeRender(metadata: DatasetMetadata): boolean {
 
 function fallbackRescaleFromMetadata(metadata: DatasetMetadata, current: string): string {
   if (current && current !== '0,3000') return current;
-  if (metadata.bands === 1 && (metadata.dtype.startsWith('uint8') || metadata.dtype.startsWith('int8'))) {
+  if (
+    metadata.bands === 1 &&
+    (metadata.dtype.startsWith('uint8') || metadata.dtype.startsWith('int8'))
+  ) {
     return '0,100';
   }
   if (metadata.dtype.startsWith('uint8') || metadata.dtype.startsWith('int8')) return '0,255';
@@ -72,7 +75,10 @@ function fallbackRescaleFromMetadata(metadata: DatasetMetadata, current: string)
 
 export class TileViewerControl extends PluginControl {
   private viewerOptions: Required<
-    Pick<TileViewerControlOptions, 'rescale' | 'colormap' | 'showHillshade' | 'serverUrl' | 'opacity'>
+    Pick<
+      TileViewerControlOptions,
+      'rescale' | 'colormap' | 'showHillshade' | 'serverUrl' | 'opacity'
+    >
   > &
     Pick<TileViewerControlOptions, 'sampleUrl' | 'defaultMode'>;
 
@@ -328,7 +334,8 @@ export class TileViewerControl extends PluginControl {
     if (this.fileInput) this.fileInput.style.display = 'none';
     if (fileButton) fileButton.style.display = this.mode === 'file' ? 'inline-flex' : 'none';
     if (this.urlInput) this.urlInput.style.display = this.mode === 'url' ? 'block' : 'none';
-    if (this.serverInput) this.serverInput.style.display = this.mode === 'server' ? 'block' : 'none';
+    if (this.serverInput)
+      this.serverInput.style.display = this.mode === 'server' ? 'block' : 'none';
   }
 
   private getRenderParams(): Partial<RenderParams> {
@@ -353,7 +360,11 @@ export class TileViewerControl extends PluginControl {
   private setLoading(loading: boolean): void {
     if (this.loadButton) {
       this.loadButton.disabled = loading;
-      this.loadButton.textContent = loading ? 'Loading…' : this.loaded ? 'Apply render' : 'Load raster';
+      this.loadButton.textContent = loading
+        ? 'Loading…'
+        : this.loaded
+          ? 'Apply render'
+          : 'Load raster';
     }
   }
 
@@ -469,7 +480,7 @@ export class TileViewerControl extends PluginControl {
     if (!this.metadata) {
       throw new Error('Raster metadata is unavailable');
     }
-    const mapBounds = this.mapBounds ?? await this.getMapLibreBounds(this.metadata);
+    const mapBounds = this.mapBounds ?? (await this.getMapLibreBounds(this.metadata));
 
     addRasterLayerToMap(map, {
       sourceId: SOURCE_ID,
@@ -560,14 +571,18 @@ export class TileViewerControl extends PluginControl {
     });
   }
 
-  private async getMapLibreBounds(metadata: DatasetMetadata): Promise<[number, number, number, number]> {
+  private async getMapLibreBounds(
+    metadata: DatasetMetadata,
+  ): Promise<[number, number, number, number]> {
     const bounds = await transformBounds(metadata.bounds, metadata.crs, 'EPSG:4326');
     const west = Math.max(-180, Math.min(180, bounds[0]));
     const south = Math.max(-90, Math.min(90, bounds[1]));
     const east = Math.max(-180, Math.min(180, bounds[2]));
     const north = Math.max(-90, Math.min(90, bounds[3]));
     if (west >= east || south >= north) {
-      throw new Error(`Unable to transform raster bounds from ${metadata.crs} to longitude/latitude`);
+      throw new Error(
+        `Unable to transform raster bounds from ${metadata.crs} to longitude/latitude`,
+      );
     }
     return [west, south, east, north];
   }

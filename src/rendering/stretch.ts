@@ -17,7 +17,9 @@ export function applyContrast(value: number, contrast: number): number {
 }
 
 export function computePercentile(values: Float32Array, percentile: number): number {
-  const sorted = Array.from(values).filter((v) => Number.isFinite(v)).sort((a, b) => a - b);
+  const sorted = Array.from(values)
+    .filter((v) => Number.isFinite(v))
+    .sort((a, b) => a - b);
   if (sorted.length === 0) return 0;
   const idx = clamp(Math.floor((percentile / 100) * (sorted.length - 1)), 0, sorted.length - 1);
   return sorted[idx] ?? 0;

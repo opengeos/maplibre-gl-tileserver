@@ -1,4 +1,11 @@
-import { interpolateViridis, interpolatePlasma, interpolateInferno, interpolateMagma, interpolateTurbo, interpolateGreys } from 'd3-scale-chromatic';
+import {
+  interpolateViridis,
+  interpolatePlasma,
+  interpolateInferno,
+  interpolateMagma,
+  interpolateTurbo,
+  interpolateGreys,
+} from 'd3-scale-chromatic';
 
 const COLORMAPS: Record<string, (t: number) => string> = {
   viridis: interpolateViridis,
@@ -19,10 +26,7 @@ function parseColor(hex: string): [number, number, number] {
   return [r, g, b];
 }
 
-export function applyColormap(
-  values: Uint8ClampedArray,
-  name: string,
-): Uint8ClampedArray {
+export function applyColormap(values: Uint8ClampedArray, name: string): Uint8ClampedArray {
   const fn = COLORMAPS[name.toLowerCase()] ?? interpolateViridis;
   const out = new Uint8ClampedArray(values.length * 3);
   for (let i = 0; i < values.length; i++) {
@@ -47,7 +51,11 @@ export function grayscaleToRgb(values: Uint8ClampedArray): Uint8ClampedArray {
   return out;
 }
 
-export function mergeRgbBands(r: Uint8ClampedArray, g: Uint8ClampedArray, b: Uint8ClampedArray): Uint8ClampedArray {
+export function mergeRgbBands(
+  r: Uint8ClampedArray,
+  g: Uint8ClampedArray,
+  b: Uint8ClampedArray,
+): Uint8ClampedArray {
   const out = new Uint8ClampedArray(r.length * 3);
   for (let i = 0; i < r.length; i++) {
     const idx = i * 3;

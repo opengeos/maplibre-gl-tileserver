@@ -32,23 +32,23 @@ async function parseGeoKeys(
 function parseNoData(
   image: Awaited<ReturnType<Awaited<ReturnType<typeof fromArrayBuffer>>['getImage']>>,
 ): number | undefined {
-  const raw = image.fileDirectory.GDAL_NODATA;
-  if (typeof raw !== 'string') return undefined;
-  const value = Number.parseFloat(raw.replace(/\0/g, ''));
-  return Number.isFinite(value) ? value : undefined;
+  const value = image.getGDALNoData();
+  return value !== null && Number.isFinite(value) ? value : undefined;
 }
 
 function inferDtype(
   image: Awaited<ReturnType<Awaited<ReturnType<typeof fromArrayBuffer>>['getImage']>>,
 ): string {
-  const bits = image.fileDirectory.BitsPerSample?.[0] ?? 32;
-  const sampleFormat = image.fileDirectory.SampleFormat?.[0] ?? 1;
+  const bits = image.getBitsPerSample(0) ?? 32;
+  const sampleFormat = image.getSampleFormat(0) ?? 1;
   if (sampleFormat === 3) return `float${bits}`;
   if (sampleFormat === 2) return `int${bits}`;
   return `uint${bits}`;
 }
 
-function boundsFromImage(image: Awaited<ReturnType<Awaited<ReturnType<typeof fromArrayBuffer>>['getImage']>>): [number, number, number, number] {
+function boundsFromImage(
+  image: Awaited<ReturnType<Awaited<ReturnType<typeof fromArrayBuffer>>['getImage']>>,
+): [number, number, number, number] {
   const bbox = image.getBoundingBox();
   return [bbox[0], bbox[1], bbox[2], bbox[3]];
 }
@@ -92,7 +92,10 @@ export class GeotiffProvider implements RasterProvider {
   private tiff: Awaited<ReturnType<typeof fromArrayBuffer>>;
   private image: Awaited<ReturnType<Awaited<ReturnType<typeof fromArrayBuffer>>['getImage']>>;
   private noData?: number;
-  private imageCache = new globalThis.Map<number, Awaited<ReturnType<Awaited<ReturnType<typeof fromArrayBuffer>>['getImage']>>>();
+  private imageCache = new globalThis.Map<
+    number,
+    Awaited<ReturnType<Awaited<ReturnType<typeof fromArrayBuffer>>['getImage']>>
+  >();
 
   private constructor(
     id: string,
@@ -166,12 +169,20 @@ export class GeotiffProvider implements RasterProvider {
     let outWidth = options?.width ?? readWindow.winWidth;
     let outHeight = options?.height ?? readWindow.winHeight;
     if (!options?.width && !options?.height && options?.maxSize) {
-      const scale = Math.min(1, options.maxSize / Math.max(readWindow.winWidth, readWindow.winHeight));
+      const scale = Math.min(
+        1,
+        options.maxSize / Math.max(readWindow.winWidth, readWindow.winHeight),
+      );
       outWidth = Math.max(1, Math.round(readWindow.winWidth * scale));
       outHeight = Math.max(1, Math.round(readWindow.winHeight * scale));
     }
 
-    readImage = await this.selectOverview(readWindow.winWidth, readWindow.winHeight, outWidth, outHeight);
+    readImage = await this.selectOverview(
+      readWindow.winWidth,
+      readWindow.winHeight,
+      outWidth,
+      outHeight,
+    );
     readWindow = pixelWindowForImage(readImage, bounds, this.bounds, padding);
     outWidth = Math.min(outWidth, readWindow.winWidth);
     outHeight = Math.min(outHeight, readWindow.winHeight);
@@ -221,7 +232,7 @@ export class GeotiffProvider implements RasterProvider {
     outWidth: number,
     outHeight: number,
   ) {
-    const count = await this.tiff.getImageCount?.() ?? 1;
+    const count = (await this.tiff.getImageCount?.()) ?? 1;
     let selected = this.image;
 
     for (let index = 1; index < count; index++) {

@@ -20,8 +20,14 @@ export const TileQuerySchema = z.object({
     .transform((value) => value === true || value === 'true'),
 });
 
-export function parseRenderParams(query: z.infer<typeof TileQuerySchema>, format: TileFormat): RenderParams {
-  const bands = query.bands?.split(',').map((value) => Number.parseInt(value.trim(), 10)).filter(Boolean);
+export function parseRenderParams(
+  query: z.infer<typeof TileQuerySchema>,
+  format: TileFormat,
+): RenderParams {
+  const bands = query.bands
+    ?.split(',')
+    .map((value) => Number.parseInt(value.trim(), 10))
+    .filter(Boolean);
   const rescale = query.rescale?.split(',').map(Number) as [number, number] | undefined;
   return {
     bands,

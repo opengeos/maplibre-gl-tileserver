@@ -1,4 +1,4 @@
-import "./lib/styles/plugin-control.css";
+import './lib/styles/plugin-control.css';
 
 export { createTileServer, TileOrchestrator, registerCustomTileMatrixSet } from './index-core.js';
 export { UnsupportedFormatError, TileOutOfBoundsError } from './types.js';
