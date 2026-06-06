@@ -33,8 +33,27 @@ export async function warpWindowToTile(
 
   const gdal = await getGdal();
   const envPath = writeEnvToGdalFs(gdal as never, cacheKey, window);
-  const warpedPath = await warpDatasetToTile(gdal, envPath, tileBounds, targetCrs, tileSize);
-  return readEnviWindow(gdal, warpedPath, tileBounds, targetCrs, tileSize, window.bands);
+  // The ENVI header cannot carry an EPSG code, so pass the source CRS explicitly.
+  // The float32 window marks missing pixels with NaN; propagate it as nodata so
+  // gdalwarp's uninitialized fill stays transparent instead of becoming 0.
+  const warpedPath = await warpDatasetToTile(
+    gdal,
+    envPath,
+    tileBounds,
+    targetCrs,
+    tileSize,
+    normalizeCrs(window.crs),
+    window.noData !== undefined ? String(window.noData) : 'nan',
+  );
+  return readEnviWindow(
+    gdal,
+    warpedPath,
+    tileBounds,
+    targetCrs,
+    tileSize,
+    window.bands,
+    window.noData,
+  );
 }
 
 async function resampleWindowToTile(
@@ -216,6 +235,7 @@ async function readEnviWindow(
   crs: string,
   tileSize: number,
   bandCount: number,
+  noData?: number,
 ): Promise<RasterWindow> {
   const opened = await gdal.open(datasetPath);
   const dataset = opened.datasets[0];
@@ -249,5 +269,6 @@ async function readEnviWindow(
       -(tileBounds[3] - tileBounds[1]) / height,
     ],
     crs,
+    noData,
   };
 }
