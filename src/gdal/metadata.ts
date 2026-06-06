@@ -90,6 +90,8 @@ export async function warpDatasetToTile(
   bounds: [number, number, number, number],
   targetCrs: string,
   tileSize: number,
+  sourceCrs?: string,
+  nodataValue?: string,
 ): Promise<string> {
   const opened = await gdal.open(datasetPath);
   const dataset = opened.datasets[0];
@@ -98,6 +100,8 @@ export async function warpDatasetToTile(
   const output = await gdal.gdalwarp(dataset, [
     '-of',
     'GTiff',
+    ...(sourceCrs ? ['-s_srs', sourceCrs] : []),
+    ...(nodataValue ? ['-srcnodata', nodataValue, '-dstnodata', nodataValue] : []),
     '-t_srs',
     targetCrs,
     '-te',
