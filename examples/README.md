@@ -1,47 +1,36 @@
 # Examples
 
-This directory contains example implementations of the MapLibre GL Plugin Template.
+Interactive demos for **maplibre-gl-tileserver**. Start the dev server from the project root, then open the landing page or an example directly.
 
 ## Available Examples
 
-### Basic Example
-A simple vanilla JavaScript/TypeScript example showing how to add the plugin control to a map.
-
-```bash
-# Run from project root
-npm run dev
-# Then navigate to http://localhost:5173/examples/basic/
-```
-
-### React Example
-A React example demonstrating the React wrapper component and hooks.
-
-```bash
-# Run from project root
-npm run dev
-# Then navigate to http://localhost:5173/examples/react/
-```
+| Example | Path | Description |
+|---------|------|-------------|
+| GeoTIFF Viewer | `/examples/geotiff-viewer/` | Local GeoTIFF via the tile server API |
+| COG Viewer | `/examples/cog-viewer/` | Remote Cloud Optimized GeoTIFF |
+| DEM Hillshade | `/examples/dem-hillshade/` | Single-band DEM with hillshade |
+| MapLibre Integration | `/examples/maplibre/` | `createMapLibreRasterSource` helper |
+| React Viewer | `/examples/react/` | Collapsible control with React hooks |
 
 ## Running Examples
 
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
+```bash
+npm install
+npm run dev
+```
 
-2. Start the development server:
-   ```bash
-   npm run dev
-   ```
+Open [http://localhost:5173/](http://localhost:5173/) for the example index.
 
-3. Open your browser and navigate to the example you want to view.
+Some examples expect a local tile server on port 8000:
+
+```bash
+node dist/cli.mjs tests/fixtures/sample.tif --port 8000
+```
 
 ## Building Examples
-
-To build all examples for deployment:
 
 ```bash
 npm run build:examples
 ```
 
-The built examples will be in the `dist-examples` directory.
+Built output is written to `dist-examples/` for GitHub Pages deployment.

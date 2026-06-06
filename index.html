@@ -3,141 +3,47 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MapLibre GL Plugin Template - Examples</title>
+  <title>maplibre-gl-tileserver Examples</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #1d3557 0%, #457b9d 100%);
       min-height: 100vh;
       padding: 40px 20px;
-    }
-
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    h1 {
       color: white;
-      text-align: center;
-      margin-bottom: 10px;
-      font-size: 2.5rem;
     }
-
-    .subtitle {
-      color: rgba(255, 255, 255, 0.9);
-      text-align: center;
-      margin-bottom: 40px;
-      font-size: 1.1rem;
-    }
-
-    .examples-grid {
+    .container { max-width: 960px; margin: 0 auto; }
+    h1 { text-align: center; margin-bottom: 8px; }
+    .subtitle { text-align: center; opacity: 0.9; margin-bottom: 32px; }
+    .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
     }
-
-    .example-card {
-      background: white;
+    .card {
+      background: rgba(255,255,255,0.95);
+      color: #1d3557;
       border-radius: 12px;
-      padding: 24px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-      transition: transform 0.2s, box-shadow 0.2s;
+      padding: 20px;
       text-decoration: none;
-      color: inherit;
       display: block;
     }
-
-    .example-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
-    }
-
-    .example-card h2 {
-      color: #333;
-      margin-bottom: 8px;
-      font-size: 1.3rem;
-    }
-
-    .example-card p {
-      color: #666;
-      font-size: 0.95rem;
-      line-height: 1.5;
-      margin-bottom: 16px;
-    }
-
-    .example-card .tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .tag {
-      background: #f0f0f0;
-      color: #555;
-      padding: 4px 10px;
-      border-radius: 4px;
-      font-size: 0.8rem;
-      font-weight: 500;
-    }
-
-    .tag.vanilla { background: #fff3e0; color: #ef6c00; }
-    .tag.react { background: #e1f5fe; color: #0277bd; }
-    .tag.typescript { background: #e3f2fd; color: #1565c0; }
-
-    .footer {
-      text-align: center;
-      margin-top: 40px;
-      color: rgba(255, 255, 255, 0.8);
-    }
-
-    .footer a {
-      color: white;
-      text-decoration: none;
-      font-weight: 500;
-    }
-
-    .footer a:hover {
-      text-decoration: underline;
-    }
+    .card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+    .card h2 { margin-bottom: 8px; font-size: 1.1rem; }
+    .card p { font-size: 0.92rem; line-height: 1.45; color: #334; }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>MapLibre GL Plugin Template</h1>
-    <p class="subtitle">A template for creating MapLibre GL JS plugins with TypeScript and React support</p>
-
-    <div class="examples-grid">
-      <a href="./examples/basic/index.html" class="example-card">
-        <h2>Basic Example</h2>
-        <p>Simple vanilla JavaScript/TypeScript example showing how to add the plugin control to a map.</p>
-        <div class="tags">
-          <span class="tag vanilla">Vanilla JS</span>
-          <span class="tag typescript">TypeScript</span>
-        </div>
-      </a>
-
-      <a href="./examples/react/index.html" class="example-card">
-        <h2>React Example</h2>
-        <p>React example demonstrating the React wrapper component and custom hooks integration.</p>
-        <div class="tags">
-          <span class="tag react">React</span>
-          <span class="tag typescript">TypeScript</span>
-        </div>
-      </a>
-    </div>
-
-    <div class="footer">
-      <p>
-        <a href="https://github.com/your-username/maplibre-gl-plugin-template">GitHub</a> ·
-        <a href="https://www.npmjs.com/package/maplibre-gl-plugin-template">npm</a>
-      </p>
+    <h1>maplibre-gl-tileserver</h1>
+    <p class="subtitle">GDAL WebAssembly XYZ tile server examples for MapLibre GL JS</p>
+    <div class="grid">
+      <a class="card" href="./examples/geotiff-viewer/index.html"><h2>GeoTIFF Viewer</h2><p>Local GeoTIFF served through the tile server API.</p></a>
+      <a class="card" href="./examples/cog-viewer/index.html"><h2>COG Viewer</h2><p>Remote Cloud Optimized GeoTIFF via geotiff.js range reads.</p></a>
+      <a class="card" href="./examples/dem-hillshade/index.html"><h2>DEM Hillshade</h2><p>Single-band DEM rendering with hillshade and colormap params.</p></a>
+      <a class="card" href="./examples/maplibre/index.html"><h2>MapLibre Integration</h2><p>Uses <code>createMapLibreRasterSource</code> helper.</p></a>
+      <a class="card" href="./examples/react/index.html"><h2>React Viewer</h2><p>Collapsible MapLibre control with React hooks.</p></a>
     </div>
   </div>
 </body>

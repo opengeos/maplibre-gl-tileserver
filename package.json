@@ -1,11 +1,14 @@
 {
-  "name": "geolibre-plugin-template",
+  "name": "maplibre-gl-tileserver",
   "version": "0.1.0",
-  "description": "A template for creating GeoLibre plugins with MapLibre GL JS controls",
+  "description": "Pure TypeScript tile server powered by GDAL WebAssembly for MapLibre GL JS",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/types/index.d.ts",
+  "bin": {
+    "maplibre-gl-tileserver": "./dist/cli.mjs"
+  },
   "exports": {
     ".": {
       "import": {
@@ -15,6 +18,36 @@
       "require": {
         "types": "./dist/types/index.d.ts",
         "default": "./dist/index.cjs"
+      }
+    },
+    "./browser": {
+      "import": {
+        "types": "./dist/types/browser.d.ts",
+        "default": "./dist/browser.mjs"
+      },
+      "require": {
+        "types": "./dist/types/browser.d.ts",
+        "default": "./dist/browser.cjs"
+      }
+    },
+    "./maplibre": {
+      "import": {
+        "types": "./dist/types/maplibre.d.ts",
+        "default": "./dist/maplibre.mjs"
+      },
+      "require": {
+        "types": "./dist/types/maplibre.d.ts",
+        "default": "./dist/maplibre.cjs"
+      }
+    },
+    "./server": {
+      "import": {
+        "types": "./dist/types/server/index.d.ts",
+        "default": "./dist/server.mjs"
+      },
+      "require": {
+        "types": "./dist/types/server/index.d.ts",
+        "default": "./dist/server.cjs"
       }
     },
     "./react": {
@@ -27,7 +60,7 @@
         "default": "./dist/react.cjs"
       }
     },
-    "./style.css": "./dist/geolibre-plugin-template.css"
+    "./style.css": "./dist/maplibre-gl-tileserver.css"
   },
   "files": [
     "dist",
@@ -38,38 +71,43 @@
     "*.css"
   ],
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --config vite.examples.config.ts",
     "build": "npm run build:lib && npm run build:geolibre",
     "build:lib": "tsc -p tsconfig.build.json && vite build",
     "build:geolibre": "vite build --config vite.geolibre.config.ts",
-    "build:examples": "vite build --config vite.examples.config.ts",
+    "build:examples": "vite build --config vite.examples.config.ts --base /maplibre-gl-tileserver/",
     "package:geolibre": "npm run build:geolibre && node scripts/package-geolibre-plugin.mjs",
     "serve:geolibre": "node scripts/serve-geolibre-plugin.mjs",
-    "preview": "vite preview",
+    "preview": "vite preview --config vite.examples.config.ts --base /maplibre-gl-tileserver/",
     "test": "vitest --run",
     "test:ui": "vitest --ui",
+    "test:e2e": "playwright test",
     "test:coverage": "vitest --coverage",
+    "fixtures:generate": "node scripts/generate-fixture.mjs",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
     "prepublishOnly": "npm run build:lib"
   },
   "keywords": [
-    "geolibre",
     "maplibre",
     "maplibre-gl",
-    "map",
-    "plugin",
-    "control",
-    "react",
+    "tileserver",
+    "gdal",
+    "geotiff",
+    "cog",
+    "webassembly",
+    "raster",
+    "xyz",
     "typescript"
   ],
-  "author": "Your Name",
+  "author": "Qiusheng Wu",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-username/geolibre-plugin-template.git"
+    "url": "https://github.com/opengeos/maplibre-gl-tileserver.git"
   },
   "peerDependencies": {
+    "fastify": ">=4.0.0",
     "maplibre-gl": ">=3.0.0",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
@@ -80,9 +118,24 @@
     },
     "react-dom": {
       "optional": true
+    },
+    "fastify": {
+      "optional": true
     }
   },
+  "dependencies": {
+    "@developmentseed/morecantile": "^0.7.0",
+    "@fastify/cors": "^11.0.0",
+    "commander": "^14.0.0",
+    "d3-scale-chromatic": "^3.1.0",
+    "fastify": "^5.2.0",
+    "gdal3.js": "^2.8.1",
+    "geotiff": "^2.1.3",
+    "lru-cache": "^11.1.0",
+    "zod": "^3.24.0"
+  },
   "devDependencies": {
+    "@playwright/test": "^1.52.0",
     "@testing-library/react": "^16.0.0",
     "@testing-library/user-event": "^14.5.0",
     "@types/node": "^22.0.0",
@@ -91,8 +144,10 @@
     "@typescript-eslint/eslint-plugin": "^8.18.0",
     "@typescript-eslint/parser": "^8.18.0",
     "@vitejs/plugin-react": "^4.3.0",
+    "@vitest/coverage-v8": "^2.1.9",
     "@vitest/ui": "^2.1.0",
     "eslint": "^9.17.0",
+    "eslint-config-prettier": "^10.1.0",
     "jsdom": "^25.0.0",
     "maplibre-gl": "^5.14.0",
     "prettier": "^3.4.0",
@@ -101,6 +156,10 @@
     "typescript": "^5.7.0",
     "vite": "^6.0.0",
     "vite-plugin-dts": "^4.3.0",
+    "vite-plugin-static-copy": "^2.3.0",
     "vitest": "^2.1.0"
+  },
+  "engines": {
+    "node": ">=22"
   }
 }

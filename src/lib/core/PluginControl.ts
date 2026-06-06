@@ -99,6 +99,8 @@ export class PluginControl implements IControl {
    * Implements the IControl interface.
    */
   onRemove(): void {
+    this.onBeforeRemove();
+
     // Remove event listeners
     if (this._resizeHandler) {
       window.removeEventListener('resize', this._resizeHandler);
@@ -272,6 +274,21 @@ export class PluginControl implements IControl {
   }
 
   /**
+   * Hook for subclasses to inject panel content.
+   */
+  protected createPanelContent(): HTMLElement {
+    const placeholder = document.createElement('p');
+    placeholder.className = 'plugin-control-placeholder';
+    placeholder.textContent = 'Add your custom plugin content here.';
+    return placeholder;
+  }
+
+  /**
+   * Hook for subclasses to release resources before the control is removed.
+   */
+  protected onBeforeRemove(): void {}
+
+  /**
    * Creates the panel element with header and content areas.
    * Panel is positioned as a dropdown below the toggle button.
    *
@@ -300,14 +317,9 @@ export class PluginControl implements IControl {
     header.appendChild(title);
     header.appendChild(closeBtn);
 
-    // Create content area
     const content = document.createElement('div');
     content.className = 'plugin-control-content';
-    content.innerHTML = `
-      <p class="plugin-control-placeholder">
-        Add your custom plugin content here.
-      </p>
-    `;
+    content.appendChild(this.createPanelContent());
 
     panel.appendChild(header);
     panel.appendChild(content);

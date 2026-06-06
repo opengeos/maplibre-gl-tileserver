@@ -1,8 +1,10 @@
 {
-  "id": "geolibre-plugin-template",
-  "name": "GeoLibre Plugin Template",
+  "id": "maplibre-gl-tileserver",
+  "name": "MapLibre GL Tile Server",
   "version": "0.1.0",
+  "description": "GDAL WebAssembly raster tile server for MapLibre GL JS",
+  "author": "OpenGeo",
+  "license": "MIT",
   "entry": "dist/index.js",
-  "description": "A starter GeoLibre plugin bundle with a MapLibre control.",
   "style": "dist/style.css"
 }
