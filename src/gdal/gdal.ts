@@ -1,6 +1,3 @@
-import dataUrl from 'gdal3.js/dist/package/gdal3WebAssembly.data?url';
-import wasmUrl from 'gdal3.js/dist/package/gdal3WebAssembly.wasm?url';
-
 export type GdalModule = {
   open: (file: string | string[]) => Promise<{ datasets: Array<{ pointer: number; path: string; type: string }>; errors: string[] }>;
   close: (dataset: { pointer: number }) => Promise<void>;
@@ -18,7 +15,13 @@ export async function loadGdal(): Promise<GdalModule> {
   const isNode = typeof process !== 'undefined' && Boolean(process.versions?.node);
 
   if (!isNode && typeof window !== 'undefined') {
-    const { default: initGdalJs } = await import('gdal3.js');
+    // Vite-style `?url` asset imports are loaded lazily so that Node-based
+    // runners (e.g. Playwright) never try to resolve the raw .data/.wasm files.
+    const [{ default: initGdalJs }, { default: dataUrl }, { default: wasmUrl }] = await Promise.all([
+      import('gdal3.js'),
+      import('gdal3.js/dist/package/gdal3WebAssembly.data?url'),
+      import('gdal3.js/dist/package/gdal3WebAssembly.wasm?url'),
+    ]);
     return initGdalJs({
       paths: {
         data: dataUrl,
