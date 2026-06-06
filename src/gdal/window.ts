@@ -44,12 +44,19 @@ async function resampleWindowToTile(
   tileSize: number,
   transformTargetToSource?: (point: [number, number]) => [number, number] | null,
 ): Promise<RasterWindow> {
-  const [sourceOriginX, sourcePixelWidth, , sourceOriginY, , sourcePixelHeight] = window.geotransform;
+  const [sourceOriginX, sourcePixelWidth, , sourceOriginY, , sourcePixelHeight] =
+    window.geotransform;
   const tilePixelWidth = (tileBounds[2] - tileBounds[0]) / tileSize;
   const tilePixelHeight = (tileBounds[3] - tileBounds[1]) / tileSize;
   const output = Array.from({ length: window.bands }, () => new Float32Array(tileSize * tileSize));
   const sourceGrid = transformTargetToSource
-    ? createSourceGrid(tileBounds, tileSize, tilePixelWidth, tilePixelHeight, transformTargetToSource)
+    ? createSourceGrid(
+        tileBounds,
+        tileSize,
+        tilePixelWidth,
+        tilePixelHeight,
+        transformTargetToSource,
+      )
     : null;
 
   for (let row = 0; row < tileSize; row++) {
@@ -62,7 +69,9 @@ async function resampleWindowToTile(
       const targetPoint: [number, number] = [x, y];
       const sourcePoint = sourceGrid
         ? interpolateSourceGrid(sourceGrid, col, row)
-        : transformTargetToSource ? transformTargetToSource(targetPoint) : targetPoint;
+        : transformTargetToSource
+          ? transformTargetToSource(targetPoint)
+          : targetPoint;
       const targetIndex = row * tileSize + col;
       if (!sourcePoint) {
         for (let band = 0; band < window.bands; band++) output[band]![targetIndex] = Number.NaN;
@@ -90,14 +99,7 @@ async function resampleWindowToTile(
     height: tileSize,
     bands: window.bands,
     data: output,
-    geotransform: [
-      tileBounds[0],
-      tilePixelWidth,
-      0,
-      tileBounds[3],
-      0,
-      -tilePixelHeight,
-    ],
+    geotransform: [tileBounds[0], tilePixelWidth, 0, tileBounds[3], 0, -tilePixelHeight],
     crs: targetCrs,
     noData: window.noData,
   };
@@ -128,7 +130,11 @@ function createSourceGrid(
   return { step, cols, rows, points };
 }
 
-function interpolateSourceGrid(grid: SourceGrid, col: number, row: number): [number, number] | null {
+function interpolateSourceGrid(
+  grid: SourceGrid,
+  col: number,
+  row: number,
+): [number, number] | null {
   const gridCol = Math.min(grid.cols - 2, Math.floor(col / grid.step));
   const gridRow = Math.min(grid.rows - 2, Math.floor(row / grid.step));
   const tx = (col - gridCol * grid.step) / grid.step;
@@ -144,10 +150,7 @@ function interpolateSourceGrid(grid: SourceGrid, col: number, row: number): [num
   const topY = p00[1] + (p10[1] - p00[1]) * tx;
   const bottomX = p01[0] + (p11[0] - p01[0]) * tx;
   const bottomY = p01[1] + (p11[1] - p01[1]) * tx;
-  return [
-    topX + (bottomX - topX) * ty,
-    topY + (bottomY - topY) * ty,
-  ];
+  return [topX + (bottomX - topX) * ty, topY + (bottomY - topY) * ty];
 }
 
 function sampleBilinear(
@@ -185,7 +188,8 @@ function sampleBilinear(
   let value = 0;
   let weight = 0;
   for (const sample of samples) {
-    if (!Number.isFinite(sample.value) || (noData !== undefined && sample.value === noData)) continue;
+    if (!Number.isFinite(sample.value) || (noData !== undefined && sample.value === noData))
+      continue;
     value += sample.value * sample.weight;
     weight += sample.weight;
   }

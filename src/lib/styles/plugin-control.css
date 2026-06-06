@@ -166,7 +166,9 @@
   border: 1px solid #ddd;
   border-radius: 4px;
   outline: none;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
 }
 
 .plugin-control-input:focus {

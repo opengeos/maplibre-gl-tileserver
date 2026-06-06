@@ -1,3 +1,5 @@
+declare module '*.css';
+
 declare module 'gdal3.js/node.js' {
   import initGdalJs from 'gdal3.js';
   export default initGdalJs;

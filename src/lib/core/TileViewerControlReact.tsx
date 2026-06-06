@@ -4,8 +4,7 @@ import type { TileViewerControlOptions } from './TileViewerControl';
 import type { PluginControlReactProps } from './types';
 
 export interface TileViewerControlReactProps
-  extends TileViewerControlOptions,
-    Pick<PluginControlReactProps, 'map' | 'onStateChange'> {}
+  extends TileViewerControlOptions, Pick<PluginControlReactProps, 'map' | 'onStateChange'> {}
 
 export function TileViewerControlReact({
   map,

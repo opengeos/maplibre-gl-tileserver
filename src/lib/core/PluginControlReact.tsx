@@ -1,6 +1,6 @@
-import { useEffect, useRef } from "react";
-import { PluginControl } from "./PluginControl";
-import type { PluginControlReactProps } from "./types";
+import { useEffect, useRef } from 'react';
+import { PluginControl } from './PluginControl';
+import type { PluginControlReactProps } from './types';
 
 /**
  * React wrapper component for PluginControl.
@@ -49,13 +49,13 @@ export function PluginControlReact({
 
     // Register state change handler if provided
     if (onStateChange) {
-      control.on("statechange", (event) => {
+      control.on('statechange', (event) => {
         onStateChange(event.state);
       });
     }
 
     // Add control to map
-    map.addControl(control, options.position || "top-right");
+    map.addControl(control, options.position || 'top-right');
 
     // Cleanup on unmount
     return () => {
@@ -71,10 +71,7 @@ export function PluginControlReact({
     if (controlRef.current) {
       // Handle collapsed state changes
       const currentState = controlRef.current.getState();
-      if (
-        options.collapsed !== undefined &&
-        options.collapsed !== currentState.collapsed
-      ) {
+      if (options.collapsed !== undefined && options.collapsed !== currentState.collapsed) {
         if (options.collapsed) {
           controlRef.current.collapse();
         } else {

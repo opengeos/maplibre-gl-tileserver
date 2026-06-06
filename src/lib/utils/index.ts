@@ -1,8 +1,1 @@
-export {
-  clamp,
-  formatNumericValue,
-  generateId,
-  debounce,
-  throttle,
-  classNames,
-} from './helpers';
+export { clamp, formatNumericValue, generateId, debounce, throttle, classNames } from './helpers';

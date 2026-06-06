@@ -73,7 +73,12 @@ export function getTileBounds(
 
 export function getTileMatrixCrs(tms: TileMatrixSet): string {
   const crs = tms.crs;
-  const uri = typeof crs === 'string' ? crs : typeof crs === 'object' && crs && 'uri' in crs ? String(crs.uri) : '';
+  const uri =
+    typeof crs === 'string'
+      ? crs
+      : typeof crs === 'object' && crs && 'uri' in crs
+        ? String(crs.uri)
+        : '';
   const epsgMatch = uri.match(/EPSG[/\\](?:0[/\\])?(\d+)/i);
   if (epsgMatch) return `EPSG:${epsgMatch[1]}`;
   if (uri.includes('CRS84')) return 'EPSG:4326';

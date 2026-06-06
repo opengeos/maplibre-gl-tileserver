@@ -77,4 +77,7 @@ export type PluginControlEvent = 'collapse' | 'expand' | 'statechange';
 /**
  * Event handler function type
  */
-export type PluginControlEventHandler = (event: { type: PluginControlEvent; state: PluginState }) => void;
+export type PluginControlEventHandler = (event: {
+  type: PluginControlEvent;
+  state: PluginState;
+}) => void;

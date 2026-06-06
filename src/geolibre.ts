@@ -1,18 +1,11 @@
-import { TileViewerControl } from "./lib/core/TileViewerControl";
-import type { PluginState } from "./lib/core/types";
-import "./lib/styles/plugin-control.css";
+import { TileViewerControl } from './lib/core/TileViewerControl';
+import type { PluginState } from './lib/core/types';
+import './lib/styles/plugin-control.css';
 
-type GeoLibreMapControlPosition =
-  | "top-left"
-  | "top-right"
-  | "bottom-left"
-  | "bottom-right";
+type GeoLibreMapControlPosition = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 
 interface GeoLibreAppAPI {
-  addMapControl: (
-    control: TileViewerControl,
-    position?: GeoLibreMapControlPosition,
-  ) => boolean;
+  addMapControl: (control: TileViewerControl, position?: GeoLibreMapControlPosition) => boolean;
   removeMapControl: (control: TileViewerControl) => void;
 }
 
@@ -32,14 +25,14 @@ interface GeoLibrePlugin {
 }
 
 let control: TileViewerControl | null = null;
-let position: GeoLibreMapControlPosition = "top-right";
+let position: GeoLibreMapControlPosition = 'top-right';
 let pendingState: Partial<PluginState> | null = null;
 
 function createControl(): TileViewerControl {
   const nextControl = new TileViewerControl({
     collapsed: pendingState?.collapsed ?? true,
     panelWidth: pendingState?.panelWidth ?? 320,
-    title: "Raster Viewer",
+    title: 'Raster Viewer',
   });
 
   if (pendingState) {
@@ -50,22 +43,20 @@ function createControl(): TileViewerControl {
 }
 
 function isPluginState(value: unknown): value is Partial<PluginState> {
-  if (!value || typeof value !== "object" || Array.isArray(value)) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
     return false;
   }
 
   const candidate = value as Record<string, unknown>;
-  if ("collapsed" in candidate && typeof candidate.collapsed !== "boolean") {
+  if ('collapsed' in candidate && typeof candidate.collapsed !== 'boolean') {
     return false;
   }
-  if ("panelWidth" in candidate && typeof candidate.panelWidth !== "number") {
+  if ('panelWidth' in candidate && typeof candidate.panelWidth !== 'number') {
     return false;
   }
   if (
-    "data" in candidate &&
-    (typeof candidate.data !== "object" ||
-      candidate.data === null ||
-      Array.isArray(candidate.data))
+    'data' in candidate &&
+    (typeof candidate.data !== 'object' || candidate.data === null || Array.isArray(candidate.data))
   ) {
     return false;
   }
@@ -74,9 +65,9 @@ function isPluginState(value: unknown): value is Partial<PluginState> {
 }
 
 export const plugin: GeoLibrePlugin = {
-  id: "maplibre-gl-raster",
-  name: "MapLibre GL Tile Server",
-  version: "0.1.0",
+  id: 'maplibre-gl-raster',
+  name: 'MapLibre GL Tile Server',
+  version: '0.1.0',
   activate(app) {
     control = control ?? createControl();
     const added = app.addMapControl(control, position);

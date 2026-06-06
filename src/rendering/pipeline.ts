@@ -1,11 +1,6 @@
 import type { RenderParams } from '../types.js';
 import type { RasterWindow } from '../providers/types.js';
-import {
-  applyContrast,
-  applyGamma,
-  autoStretchRange,
-  stretchBand,
-} from './stretch.js';
+import { applyContrast, applyGamma, autoStretchRange, stretchBand } from './stretch.js';
 import { applyColormap, grayscaleToRgb, mergeRgbBands } from './colormap.js';
 import { computeHillshade } from './hillshade.js';
 
@@ -42,10 +37,14 @@ export function renderWindow(window: RasterWindow, params: RenderParams): Render
     const [min, max] = params.rescale ?? autoStretchRange(data, noData);
     let values = stretchBand(data, min, max, noData);
     if (params.gamma && params.gamma !== 1) {
-      values = new Uint8ClampedArray(values.map((v) => Math.round(applyGamma(v / 255, params.gamma!) * 255)));
+      values = new Uint8ClampedArray(
+        values.map((v) => Math.round(applyGamma(v / 255, params.gamma!) * 255)),
+      );
     }
     if (params.contrast) {
-      values = new Uint8ClampedArray(values.map((v) => Math.round(applyContrast(v / 255, params.contrast!) * 255)));
+      values = new Uint8ClampedArray(
+        values.map((v) => Math.round(applyContrast(v / 255, params.contrast!) * 255)),
+      );
     }
     rgb = params.colormap ? applyColormap(values, params.colormap) : grayscaleToRgb(values);
   }

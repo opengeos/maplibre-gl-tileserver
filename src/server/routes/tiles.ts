@@ -3,7 +3,10 @@ import type { TileOrchestrator } from '../../orchestrator.js';
 import { TileOutOfBoundsError } from '../../types.js';
 import { parseRenderParams, TileParamsSchema, TileQuerySchema } from '../schemas.js';
 
-export async function registerTileRoutes(app: FastifyInstance, orchestrator: TileOrchestrator): Promise<void> {
+export async function registerTileRoutes(
+  app: FastifyInstance,
+  orchestrator: TileOrchestrator,
+): Promise<void> {
   app.get('/health', async () => ({ status: 'ok' }));
 
   app.get('/metadata', async () => orchestrator.getMetadata());
@@ -29,11 +32,7 @@ export async function registerTileRoutes(app: FastifyInstance, orchestrator: Til
         render,
       });
       const contentType =
-        params.ext === 'png'
-          ? 'image/png'
-          : params.ext === 'webp'
-            ? 'image/webp'
-            : 'image/jpeg';
+        params.ext === 'png' ? 'image/png' : params.ext === 'webp' ? 'image/webp' : 'image/jpeg';
       reply.header('Content-Type', contentType);
       reply.header('Cache-Control', 'public, max-age=86400');
       return reply.send(Buffer.from(bytes));

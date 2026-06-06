@@ -31,7 +31,12 @@ async function runTileTask<T>(task: () => Promise<T>): Promise<T> {
   }
 }
 
-function parseTileUrl(url: string): { layerId: string; z: number; x: number; y: number } {
+function parseTileUrl(url: string): {
+  layerId: string;
+  z: number;
+  x: number;
+  y: number;
+} {
   const withoutProtocol = url.replace(/^mlts:\/\//, '');
   const [pathPart] = withoutProtocol.split('?');
   const segments = pathPart.split('/').filter(Boolean);

@@ -3,10 +3,7 @@ import { z } from 'zod';
 export const TileFormatSchema = z.enum(['png', 'jpg', 'jpeg', 'webp']);
 export type TileFormat = z.infer<typeof TileFormatSchema>;
 
-export const TileMatrixSetIdSchema = z.enum([
-  'WebMercatorQuad',
-  'WorldCRS84Quad',
-]);
+export const TileMatrixSetIdSchema = z.enum(['WebMercatorQuad', 'WorldCRS84Quad']);
 export type TileMatrixSetId = z.infer<typeof TileMatrixSetIdSchema>;
 
 export const RenderParamsSchema = z.object({
@@ -27,7 +24,11 @@ export const CacheConfigSchema = z.object({
 });
 
 export const TileServerConfigSchema = z.object({
-  source: z.union([z.string(), z.instanceof(ArrayBuffer), z.custom<File>((v) => typeof File !== 'undefined' && v instanceof File)]),
+  source: z.union([
+    z.string(),
+    z.instanceof(ArrayBuffer),
+    z.custom<File>((v) => typeof File !== 'undefined' && v instanceof File),
+  ]),
   tileMatrixSet: z.union([TileMatrixSetIdSchema, z.string()]).default('WebMercatorQuad'),
   tileSize: z.number().int().positive().default(256),
   port: z.number().int().positive().default(8000),
@@ -80,7 +81,9 @@ export interface TileServerInstance {
 
 export class UnsupportedFormatError extends Error {
   constructor(format: string) {
-    super(`Unsupported raster format: ${format}. NetCDF, HDF5, and JPEG2000 are not available in the bundled GDAL WASM build.`);
+    super(
+      `Unsupported raster format: ${format}. NetCDF, HDF5, and JPEG2000 are not available in the bundled GDAL WASM build.`,
+    );
     this.name = 'UnsupportedFormatError';
   }
 }

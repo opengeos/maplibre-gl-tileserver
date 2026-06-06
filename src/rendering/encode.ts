@@ -24,8 +24,8 @@ function deflateStored(data: Uint8Array): Uint8Array {
     output[offset++] = isFinal ? 0x01 : 0x00;
     output[offset++] = len & 0xff;
     output[offset++] = (len >> 8) & 0xff;
-    output[offset++] = (~len) & 0xff;
-    output[offset++] = ((~len) >> 8) & 0xff;
+    output[offset++] = ~len & 0xff;
+    output[offset++] = (~len >> 8) & 0xff;
     output.set(data.subarray(position, position + len), offset);
     offset += len;
   }

@@ -1,12 +1,26 @@
 export type GdalModule = {
-  open: (file: string | string[]) => Promise<{ datasets: Array<{ pointer: number; path: string; type: string }>; errors: string[] }>;
+  open: (file: string | string[]) => Promise<{
+    datasets: Array<{ pointer: number; path: string; type: string }>;
+    errors: string[];
+  }>;
   close: (dataset: { pointer: number }) => Promise<void>;
   getInfo: (dataset: { pointer: number }) => Promise<Record<string, unknown>>;
-  gdal_translate: (dataset: { pointer: number }, options?: string[]) => Promise<{ local: string; real: string }>;
-  gdalwarp: (dataset: { pointer: number }, options?: string[]) => Promise<{ local: string; real: string }>;
+  gdal_translate: (
+    dataset: { pointer: number },
+    options?: string[],
+  ) => Promise<{ local: string; real: string }>;
+  gdalwarp: (
+    dataset: { pointer: number },
+    options?: string[],
+  ) => Promise<{ local: string; real: string }>;
   gdaltransform: (coords: number[][], options: string[]) => Promise<number[][]>;
   getFileBytes: (filePath: string | { local: string; real: string }) => Promise<Uint8Array>;
-  Module?: { FS: { writeFile: (path: string, data: Int8Array) => void; mkdir: (path: string) => void } };
+  Module?: {
+    FS: {
+      writeFile: (path: string, data: Int8Array) => void;
+      mkdir: (path: string) => void;
+    };
+  };
 };
 
 let gdalPromise: Promise<GdalModule> | null = null;
@@ -17,11 +31,13 @@ export async function loadGdal(): Promise<GdalModule> {
   if (!isNode && typeof window !== 'undefined') {
     // Vite-style `?url` asset imports are loaded lazily so that Node-based
     // runners (e.g. Playwright) never try to resolve the raw .data/.wasm files.
-    const [{ default: initGdalJs }, { default: dataUrl }, { default: wasmUrl }] = await Promise.all([
-      import('gdal3.js'),
-      import('gdal3.js/dist/package/gdal3WebAssembly.data?url'),
-      import('gdal3.js/dist/package/gdal3WebAssembly.wasm?url'),
-    ]);
+    const [{ default: initGdalJs }, { default: dataUrl }, { default: wasmUrl }] = await Promise.all(
+      [
+        import('gdal3.js'),
+        import('gdal3.js/dist/package/gdal3WebAssembly.data?url'),
+        import('gdal3.js/dist/package/gdal3WebAssembly.wasm?url'),
+      ],
+    );
     return initGdalJs({
       paths: {
         data: dataUrl,
@@ -53,7 +69,10 @@ export async function writeFileToGdalFs(
   } catch {
     // directory may already exist
   }
-  gdal.Module.FS.writeFile(virtualPath, new Int8Array(data.buffer, data.byteOffset, data.byteLength));
+  gdal.Module.FS.writeFile(
+    virtualPath,
+    new Int8Array(data.buffer, data.byteOffset, data.byteLength),
+  );
 }
 
 export async function readLocalFileToGdal(

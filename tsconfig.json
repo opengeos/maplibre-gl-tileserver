@@ -23,13 +23,7 @@
     /* Type generation */
     "declaration": true,
     "declarationMap": true,
-    "emitDeclarationOnly": false,
-
-    /* Path aliases */
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    }
+    "emitDeclarationOnly": false
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist", "examples", "tests"]

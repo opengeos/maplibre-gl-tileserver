@@ -39,7 +39,10 @@ export class IndexedDBTileCache {
     await new Promise<void>((resolve, reject) => {
       const tx = this.db!.transaction(STORE_NAME, 'readwrite');
       const store = tx.objectStore(STORE_NAME);
-      const request = store.put(value.buffer.slice(value.byteOffset, value.byteOffset + value.byteLength), key);
+      const request = store.put(
+        value.buffer.slice(value.byteOffset, value.byteOffset + value.byteLength),
+        key,
+      );
       request.onsuccess = () => resolve();
       request.onerror = () => reject(request.error);
     });

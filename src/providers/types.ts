@@ -32,7 +32,7 @@ export function isRemoteUrl(source: SourceInput): source is string {
 
 export function isGeotiffSource(source: SourceInput): boolean {
   if (typeof source !== 'string') return true;
-  const path = isRemoteUrl(source) ? source.split('?')[0] ?? source : source;
+  const path = isRemoteUrl(source) ? (source.split('?')[0] ?? source) : source;
   const lower = path.toLowerCase();
   return lower.endsWith('.tif') || lower.endsWith('.tiff') || lower.endsWith('.cog');
 }

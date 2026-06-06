@@ -33,11 +33,23 @@ export class GdalProvider implements RasterProvider {
     this.bandCount = meta.bands;
   }
 
-  static async fromSource(source: SourceInput, tileMatrixSetId = 'WebMercatorQuad'): Promise<GdalProvider> {
+  static async fromSource(
+    source: SourceInput,
+    tileMatrixSetId = 'WebMercatorQuad',
+  ): Promise<GdalProvider> {
     const gdal = await getGdal();
     let datasetPath: string;
     let id: string;
-    const module = (gdal as { Module?: { FS: { writeFile: (p: string, d: Int8Array) => void; mkdir: (p: string) => void } } }).Module;
+    const module = (
+      gdal as {
+        Module?: {
+          FS: {
+            writeFile: (p: string, d: Int8Array) => void;
+            mkdir: (p: string) => void;
+          };
+        };
+      }
+    ).Module;
     try {
       module?.FS.mkdir('/input');
     } catch {

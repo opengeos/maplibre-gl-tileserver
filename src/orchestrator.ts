@@ -5,7 +5,12 @@ import { transformBounds, transformBoundsToSource } from './gdal/reprojection.js
 import type { SourceInput } from './providers/types.js';
 import { createRasterProvider, GdalProvider, type RasterProvider } from './providers/index.js';
 import { buildSourceId, TileCache } from './cache/index.js';
-import { getTileBounds, getTileMatrixCrs, getTileMatrixSet, computeZoomRange } from './tilematrix/index.js';
+import {
+  getTileBounds,
+  getTileMatrixCrs,
+  getTileMatrixSet,
+  computeZoomRange,
+} from './tilematrix/index.js';
 import { renderWindow } from './rendering/pipeline.js';
 import { encodeImage } from './rendering/encode.js';
 import { warpDatasetPathToTile, warpWindowToTile } from './gdal/window.js';
@@ -31,9 +36,10 @@ export class TileOrchestrator {
 
   constructor(private options: TileOrchestratorOptions) {
     this.sourceId = buildSourceId(options.source);
-    this.tms = typeof options.tileMatrixSet === 'string' || !options.tileMatrixSet
-      ? getTileMatrixSet(options.tileMatrixSet ?? 'WebMercatorQuad')
-      : options.tileMatrixSet;
+    this.tms =
+      typeof options.tileMatrixSet === 'string' || !options.tileMatrixSet
+        ? getTileMatrixSet(options.tileMatrixSet ?? 'WebMercatorQuad')
+        : options.tileMatrixSet;
     this.tileSize = options.tileSize ?? 256;
     this.tmsYFlip = options.tms ?? false;
     this.cache = options.cache ?? new TileCache();
@@ -41,7 +47,10 @@ export class TileOrchestrator {
 
   async init(): Promise<void> {
     await this.cache.init();
-    this.provider = await createRasterProvider(this.options.source, this.tms.id ?? 'WebMercatorQuad');
+    this.provider = await createRasterProvider(
+      this.options.source,
+      this.tms.id ?? 'WebMercatorQuad',
+    );
   }
 
   async getMetadata(): Promise<DatasetMetadata> {
@@ -109,7 +118,14 @@ export class TileOrchestrator {
     const cached = await this.cache.get(key);
     if (cached) return cached;
 
-    const tileBounds = getTileBounds(this.tms, request.z, request.x, request.y, this.tmsYFlip, this.tileSize);
+    const tileBounds = getTileBounds(
+      this.tms,
+      request.z,
+      request.x,
+      request.y,
+      this.tmsYFlip,
+      this.tileSize,
+    );
     const targetCrs = getTileMatrixCrs(this.tms);
     const datasetBounds = await transformBounds(
       this.provider.bounds,
@@ -131,7 +147,11 @@ export class TileOrchestrator {
         this.provider.bandCount,
       );
     } else {
-      const sourceBounds = await transformBoundsToSource(tileBounds, targetCrs, normalizeCrs(this.provider.crs));
+      const sourceBounds = await transformBoundsToSource(
+        tileBounds,
+        targetCrs,
+        normalizeCrs(this.provider.crs),
+      );
       const rawWindow = await this.provider.readWindow(sourceBounds, request.render.bands, {
         maxSize: this.tileSize * 2,
       });
@@ -145,7 +165,12 @@ export class TileOrchestrator {
     }
 
     const rendered = renderWindow(window, request.render);
-    const bytes = encodeImage(rendered.width, rendered.height, rendered.rgba, request.render.format);
+    const bytes = encodeImage(
+      rendered.width,
+      rendered.height,
+      rendered.rgba,
+      request.render.format,
+    );
     await this.cache.set(key, bytes);
     return bytes;
   }

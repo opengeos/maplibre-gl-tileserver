@@ -45,9 +45,9 @@ function albersConstants(params: Record<string, string>) {
   const q = (phi: number) => {
     const sin = Math.sin(phi);
     if (e < 1e-12) return 2 * sin;
-    return (1 - e2) * (
-      sin / (1 - e2 * sin ** 2) -
-      (1 / (2 * e)) * Math.log((1 - e * sin) / (1 + e * sin))
+    return (
+      (1 - e2) *
+      (sin / (1 - e2 * sin ** 2) - (1 / (2 * e)) * Math.log((1 - e * sin) / (1 + e * sin)))
     );
   };
 
@@ -66,7 +66,7 @@ function albersToLngLat(x: number, y: number, projection: AlbersProjection): [nu
   const dy = rho0 - (y - y0);
   const rho = Math.sign(n) * Math.sqrt(dx * dx + dy * dy);
   const theta = Math.atan2(dx, dy);
-  const targetQ = (c - (rho * n / a) ** 2) / n;
+  const targetQ = (c - ((rho * n) / a) ** 2) / n;
   let phi = Math.asin(Math.max(-1, Math.min(1, targetQ / 2)));
   for (let i = 0; i < 12; i++) {
     const delta = 1e-7;
@@ -76,13 +76,13 @@ function albersToLngLat(x: number, y: number, projection: AlbersProjection): [nu
     phi -= f / derivative;
   }
   const lambda = lambda0 + theta / n;
-  return [lambda * 180 / Math.PI, phi * 180 / Math.PI];
+  return [(lambda * 180) / Math.PI, (phi * 180) / Math.PI];
 }
 
 function lngLatToAlbers(lng: number, lat: number, projection: AlbersProjection): [number, number] {
   const { a, n, c, rho0, lambda0, x0, y0, q } = projection;
-  const phi = lat * Math.PI / 180;
-  const lambda = lng * Math.PI / 180;
+  const phi = (lat * Math.PI) / 180;
+  const lambda = (lng * Math.PI) / 180;
   const rho = (a * Math.sqrt(c - n * q(phi))) / n;
   const theta = n * (lambda - lambda0);
   return [x0 + rho * Math.sin(theta), y0 + rho0 - rho * Math.cos(theta)];
@@ -96,8 +96,10 @@ export function createPointTransformer(
   const to = normalizeCrs(targetCrs);
   if (from === to) return (point) => point;
 
-  if (from === 'EPSG:4326' && to === 'EPSG:3857') return (point) => lngLatToMercator(point[0], point[1]);
-  if (from === 'EPSG:3857' && to === 'EPSG:4326') return (point) => mercatorToLngLat(point[0], point[1]);
+  if (from === 'EPSG:4326' && to === 'EPSG:3857')
+    return (point) => lngLatToMercator(point[0], point[1]);
+  if (from === 'EPSG:3857' && to === 'EPSG:4326')
+    return (point) => mercatorToLngLat(point[0], point[1]);
 
   const fromProj = parseProjString(from);
   const toProj = parseProjString(to);

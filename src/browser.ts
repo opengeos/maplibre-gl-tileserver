@@ -10,7 +10,10 @@ export class RasterSource {
     this.orchestrator = orchestrator;
   }
 
-  static async fromUrl(url: string, options?: { tileMatrixSet?: string; cache?: TileCache }): Promise<RasterSource> {
+  static async fromUrl(
+    url: string,
+    options?: { tileMatrixSet?: string; cache?: TileCache },
+  ): Promise<RasterSource> {
     return RasterSource.fromSource(url, options);
   }
 
