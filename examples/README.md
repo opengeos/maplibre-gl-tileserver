@@ -1,6 +1,6 @@
 # Examples
 
-Interactive demos for **maplibre-gl-tileserver**. Start the dev server from the project root, then open the landing page or an example directly.
+Interactive demos for **maplibre-gl-raster**. Start the dev server from the project root, then open the landing page or an example directly.
 
 ## Available Examples
 

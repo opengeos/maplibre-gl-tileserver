@@ -5,7 +5,7 @@ import { homedir } from 'node:os';
 export class FilesystemTileCache {
   private root: string;
 
-  constructor(namespace = 'maplibre-gl-tileserver') {
+  constructor(namespace = 'maplibre-gl-raster') {
     this.root = join(homedir(), '.cache', namespace, 'tiles');
   }
 

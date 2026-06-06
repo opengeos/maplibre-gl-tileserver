@@ -26,7 +26,7 @@ class FilesystemTileCache implements PersistentTileCache {
   private fs?: Pick<FsPromises, 'access' | 'mkdir' | 'readFile' | 'writeFile'>;
   private join?: PathModule['join'];
 
-  constructor(private namespace = 'maplibre-gl-tileserver') {}
+  constructor(private namespace = 'maplibre-gl-raster') {}
 
   async init(): Promise<void> {
     const [fs, path, os] = await Promise.all([

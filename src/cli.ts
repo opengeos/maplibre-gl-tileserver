@@ -5,7 +5,7 @@ import { createTileServer } from './index-core.js';
 const program = new Command();
 
 program
-  .name('maplibre-gl-tileserver')
+  .name('maplibre-gl-raster')
   .description('Serve local and remote raster datasets as XYZ tiles for MapLibre GL JS')
   .argument('<source>', 'Raster dataset path or URL')
   .option('-p, --port <port>', 'HTTP port', '8000')
